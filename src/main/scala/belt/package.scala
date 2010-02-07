@@ -1,15 +1,26 @@
+import belt.Response
 import scalaz._
+import http.response.{Location, MovedPermanently}
 import Scalaz._
 
-import scalaz.http.response.{Response => SzResponse}
 package object belt {
   type SRequest = scalaz.http.request.Request[Stream]
   type SResponse = scalaz.http.response.Response[Stream] 
+  
+  private[belt] def loadApplication(cl: String): Option[Belt] = {
+    val userClass = Class.forName(cl)
+    if (classOf[Belt] isAssignableFrom userClass) {
+      some(userClass.newInstance.asInstanceOf[Belt])
+    } else {
+      none
+    }
+  }
 
-  def strap(f: Request => Response): SRequest => SResponse = implicit request => {
-    val response = f(new Request { val underlying = request })
-    val headers = response.headers map (t2 => (t2._1, t2._2.charsNelErr("empty header wtf")))
-    val emptySR = SzResponse.emptyStatusResponse[Stream,Stream](response.status, headers)
-    response(emptySR)
+  def redirect(to: String): Response = {
+    new Response {
+      val status = MovedPermanently
+      val headers = List((Location, to))
+      def apply(response: SResponse): SResponse = response
+    }
   }
 }

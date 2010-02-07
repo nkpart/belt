@@ -4,3 +4,9 @@ target
 project/boot
 lib_managed
 WEB-INF
+.idea/misc.xml
+.idea/workspace.xml
+.idea/dictionaries
+project/plugins/src_managed
+.idea
+*.iml
