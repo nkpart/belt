@@ -1,4 +1,4 @@
-import belt.Response
+import belt.{Belt, Response}
 import scalaz._
 import http.response.{Location, MovedPermanently}
 import Scalaz._
@@ -8,7 +8,7 @@ package object belt {
   type SResponse = scalaz.http.response.Response[Stream] 
   
   private[belt] def loadApplication(cl: String): Option[Belt] = {
-    val userClass = Class.forName(cl)
+    val userClass = Class forName cl
     if (classOf[Belt] isAssignableFrom userClass) {
       some(userClass.newInstance.asInstanceOf[Belt])
     } else {
