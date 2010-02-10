@@ -12,7 +12,7 @@ trait Response {
   def apply(f: SResponse => SResponse): Response = new Response {
     val status = Response.this.status
     val headers = Response.this.headers
-    def apply(response: SResponse) = f(this.apply(response))
+    def apply(response: SResponse) = f(Response.this.apply(response))
   }
 }
 
